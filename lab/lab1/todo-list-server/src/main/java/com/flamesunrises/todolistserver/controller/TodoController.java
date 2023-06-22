@@ -6,6 +6,7 @@ import com.flamesunrises.todolistserver.service.TodoService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0.0
  * @date 2023/06/22
  */
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/todos")
 public class TodoController {
@@ -52,25 +54,25 @@ public class TodoController {
   }
 
   @PostMapping
-  public Todo createTodo(@RequestBody Todo todo) {
-    return todoRepository.save(todo);
+  public ResponseEntity<Todo> createTodo(@RequestBody Todo todo) {
+    return ResponseEntity.ok(todoRepository.save(todo));
   }
 
   @PutMapping("/{id}")
-  public Todo updateTodo(@PathVariable Long id, @RequestBody Todo updatedTodo) {
+  public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo updatedTodo) {
     Todo todo = todoRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Invalid todo id: " + id));
 
     // 更新 todo 物件的屬性
     todo.setTitle(updatedTodo.getTitle());
     todo.setDescription(updatedTodo.getDescription());
-    // 根據需要更新其他屬性
-
-    return todoRepository.save(todo);
+    todo.setCompleted(updatedTodo.isCompleted());
+    return ResponseEntity.ok(todoRepository.save(todo));
   }
 
   @DeleteMapping("/{id}")
-  public void deleteTodo(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
     todoRepository.deleteById(id);
+    return ResponseEntity.noContent().build();
   }
 }
