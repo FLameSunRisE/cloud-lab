@@ -1,0 +1,3 @@
+-- import.sql 範例：
+-- INSERT INTO todo (title, description) VALUES ('Example Title 1', 'Example Description 1');
+-- INSERT INTO todo (title, description) VALUES ('Example Title 2', 'Example Description 2');
