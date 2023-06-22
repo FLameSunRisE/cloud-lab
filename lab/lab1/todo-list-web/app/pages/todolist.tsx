@@ -48,9 +48,7 @@ const TodoList: React.FC = () => {
         });
         if (response.ok) {
           const data = await response.json();
-          console.log('api/todos data');
-          console.log(data);
-          setTodos((prevTodos) => [...prevTodos, data.title]);
+          setTodos((prevTodos) => [...prevTodos, data]);
           setNewTodo('');
           fetchTodos();
         } else {
@@ -66,22 +64,13 @@ const TodoList: React.FC = () => {
   const handleToggleTodo = (index: number) => {
     setTodos((prevTodos) => {
       const updatedTodos = [...prevTodos];
-      if (updatedTodos[index].completed) {
-        // updatedTodos[index] = updatedTodos[index].substring(2); // 移除 ✓ 標記
-        console.log('移除 ✓ 標記');
-        updatedTodos[index].completed = false;
-      } else {
-        // updatedTodos[index] = `✓ ${updatedTodos[index]}`; // 加上 ✓ 標記
-        console.log('增加 ✓ 標記');
-        updatedTodos[index].completed = true;
-      }
+      // 反轉 completed 值 (✓ 標記)
+      updatedTodos[index].completed = !updatedTodos[index].completed;
       console.log('updatedTodos[index]')
       console.log(updatedTodos[index])
 
       // 發送更新 todo 的 API 請求
-      // 使用 fetch 或其他 HTTP 客戶端庫發送 PUT 或 PATCH 請求
-      // 例如：fetch('/api/todos/' + index, { method: 'PUT', body: JSON.stringify(updatedTodos[index]) })
-      updateTodo(updatedTodos[index]); // 發送更新 todo 的 API 請求
+      updateTodo(updatedTodos[index]);
 
       return updatedTodos;
     });
@@ -112,8 +101,8 @@ const TodoList: React.FC = () => {
   const handleTodoComplete = (index: number) => {
     setTodos((prevTodos) => {
       const updatedTodos = [...prevTodos];
-      // updatedTodos[index] = `✓ ${updatedTodos[index]}`; // 在 todo 文字前加上 ✓ 標記完成狀態
-      updatedTodos[index].completed = true; // 加上 ✓ 標記完成狀態
+      // 設定 completed 為 標記完成狀態(true)
+      updatedTodos[index].completed = true;
   
       // 發送更新 todo 的 API 請求
       updateTodo(updatedTodos[index]); // 發送更新 todo 的 API 請求
@@ -128,11 +117,8 @@ const TodoList: React.FC = () => {
       const updatedTodos = [...prevTodos];
       console.log('updatedTodos[index]');
       console.log(updatedTodos[index]);
-      // updatedTodos.splice(index, 1); // 從 todos 陣列中刪除指定索引的 todo
       
       // 發送刪除 todo 的 API 請求
-      // 使用 fetch 或其他 HTTP 客戶端庫發送 DELETE 請求
-      // 例如：fetch('/api/todos/' + index, { method: 'DELETE' })
       fetch(`http://localhost:8080/api/todos/${updatedTodos[index].id}`, { method: 'DELETE' })
       .then((response) => {
         if (response.ok) {
