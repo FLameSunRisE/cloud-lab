@@ -54,12 +54,12 @@ public class TodoController {
   }
 
   @PostMapping
-  public Todo createTodo(@RequestBody Todo todo) {
-    return todoRepository.save(todo);
+  public ResponseEntity<Todo> createTodo(@RequestBody Todo todo) {
+    return ResponseEntity.ok(todoRepository.save(todo));
   }
 
   @PutMapping("/{id}")
-  public Todo updateTodo(@PathVariable Long id, @RequestBody Todo updatedTodo) {
+  public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo updatedTodo) {
     Todo todo = todoRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Invalid todo id: " + id));
 
@@ -67,12 +67,12 @@ public class TodoController {
     todo.setTitle(updatedTodo.getTitle());
     todo.setDescription(updatedTodo.getDescription());
     todo.setCompleted(updatedTodo.isCompleted());
-
-    return todoRepository.save(todo);
+    return ResponseEntity.ok(todoRepository.save(todo));
   }
 
   @DeleteMapping("/{id}")
-  public void deleteTodo(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
     todoRepository.deleteById(id);
+    return ResponseEntity.noContent().build();
   }
 }

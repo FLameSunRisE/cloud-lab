@@ -1,8 +1,9 @@
 "use client"
 import React, { useState, useEffect  } from 'react';
 import { callApi } from '../api/api';
+import Button from '../components/Button';
 
-
+// Todo 物件的介面定義
 interface Todo {
   id: number;
   title: string;
@@ -10,7 +11,63 @@ interface Todo {
   completed: boolean;
 }
 
+// 新增按鈕的屬性介面定義
+interface ActionAddButtonProps {
+  onClick: () => void;
+  label: string;
+}
 
+// 輸入欄位元件
+const InputField: React.FC<{ value: string; onChange: (value: string) => void }> = ({ value, onChange }) => (
+  <input
+    className="w-full px-3 py-2 mr-4 text-gray-800 bg-gray-100 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-teal-400"
+    placeholder="Add Todo"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+  />
+);
+
+// 新增按鈕元件
+const ActionAddButton: React.FC<ActionAddButtonProps> = ({ onClick, label }) => (
+  <button
+    className="p-2 text-green-300 border-2 border-green-300 rounded flex-no-shrink hover:bg-indigo-800 hover:bg-green-300 hover:text-white"
+    onClick={onClick}
+  >
+    {label}
+  </button>
+);
+
+// 完成按鈕元件
+const ActionDoneButton: React.FC<ActionAddButtonProps> = ({ onClick, label }) => (
+  <button
+    className="p-2 ml-4 mr-2 text-green-300 border-2 border-green-600 rounded flex-no-shrink hover:bg-green-700 hover:text-white"
+    onClick={onClick}
+  >
+    {label}
+  </button>
+);
+
+// 未完成按鈕元件
+const ActionNotDoneButton: React.FC<ActionAddButtonProps> = ({ onClick, label }) => (
+  <button
+    className="p-2 ml-2 text-yellow-500 border-2 border-yellow-500 rounded flex-no-shrink hover:bg-yellow-600 hover:text-white"
+    onClick={onClick}
+  >
+    {label}
+  </button>
+);
+
+// 刪除按鈕元件
+const ActionDelButton: React.FC<ActionAddButtonProps> = ({ onClick, label }) => (
+  <button
+    className="p-2 ml-2 text-red-300 border-2 border-red-300 rounded flex-no-shrink border-red hover:text-white hover:bg-red-300"
+    onClick={onClick}
+  >
+    {label}
+  </button>
+);
+
+// TodoList 元件
 const TodoList: React.FC = () => {
   // 用於存儲所有的 todo
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -71,15 +128,17 @@ const TodoList: React.FC = () => {
     });
   };
 
+  // 更新 todo
   const updateTodo = async (todo: Todo) => {
     try {
-      const data = await callApi(`http://localhost:8080/api/todos/${todo.id}`, 'PUT', JSON.stringify(todo));
+      const data = await callApi(`http://localhost:8080/api/todos/${todo.id}`, 'PUT', todo);
       fetchTodos(); // 更新 todos
     } catch (error) {
       console.error('Error updating todo:', error);
     }
   };
 
+  // 刪除 todo
   const delTodo = async (todo: Todo) => {
     try {
       await callApi(`http://localhost:8080/api/todos/${todo.id}`, 'DELETE', null);
@@ -123,18 +182,8 @@ const TodoList: React.FC = () => {
         <div className="mb-4">
           <h1 className="text-gray-900">Todo List</h1>
           <div className="flex mt-4">
-            <input
-              className="w-full px-3 py-2 mr-4 text-gray-800 bg-gray-100 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-teal-400"
-              placeholder="Add Todo"
-              value={newTodo}
-              onChange={(e) => setNewTodo(e.target.value)} // 監聽輸入值變化，更新 newTodo 狀態
-            />
-            <button
-              className="p-2 text-green-300 border-2 border-green-300 rounded flex-no-shrink hover:bg-indigo-800 hover:bg-green-300 hover:text-white"
-              onClick={handleAddTodo} // 點擊時觸發 handleAddTodo 函數
-            >
-              Add
-            </button>
+            <InputField value={newTodo} onChange={setNewTodo} />
+            <ActionAddButton onClick={handleAddTodo} label="Add" />
           </div>
         </div>
         <div>
@@ -147,34 +196,14 @@ const TodoList: React.FC = () => {
               </p>
               {!todo.completed && ( // 如果 todo 未完成，渲染完成和移除按鈕
                 <>
-                  <button
-                    className="p-2 ml-4 mr-2 text-green-300 border-2 border-green-600 rounded flex-no-shrink hover:bg-green-700 hover:text-white"
-                    onClick={() => handleTodoComplete(index)} // 點擊時觸發 handleTodoComplete 函數
-                  >
-                    Done
-                  </button>
-                  <button
-                    className="p-2 ml-2 text-red-300 border-2 border-red-300 rounded flex-no-shrink border-red hover:text-white hover:bg-red-300"
-                    onClick={() => handleTodoRemove(index)} // 點擊時觸發 handleTodoRemove 函數
-                  >
-                    Remove
-                  </button>
+                  <ActionDoneButton onClick={() => handleTodoComplete(index)} label="Done" />
+                  <ActionDelButton onClick={() => handleTodoRemove(index)} label="Remove" />
                 </>
               )}
               {todo.completed && ( // 如果 todo 已完成，渲染 "Not Done" 按鈕
                 <>
-                  <button
-                    className="p-2 ml-2 text-yellow-500 border-2 border-yellow-500 rounded flex-no-shrink hover:bg-yellow-600 hover:text-white"
-                    onClick={() => handleToggleTodo(index)} // 點擊時觸發 handleToggleTodo 函數
-                  >
-                    NotDone
-                  </button>
-                  <button
-                    className="p-2 ml-2 text-red-300 border-2 border-red-300 rounded flex-no-shrink border-red hover:text-white hover:bg-red-300"
-                    onClick={() => handleTodoRemove(index)} // 點擊時觸發 handleTodoRemove 函數
-                  >
-                    Remove
-                  </button>
+                  <ActionNotDoneButton onClick={() => handleToggleTodo(index)} label="NotDone" />
+                  <ActionDelButton onClick={() => handleTodoRemove(index)} label="Remove" />
                 </>
 
                 )}
