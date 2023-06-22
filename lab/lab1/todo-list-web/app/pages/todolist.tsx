@@ -1,5 +1,7 @@
 "use client"
 import React, { useState, useEffect  } from 'react';
+import { callApi } from '../api/api';
+
 
 interface Todo {
   id: number;
@@ -39,21 +41,14 @@ const TodoList: React.FC = () => {
   const handleAddTodo = async () => {
     if (newTodo.trim() !== '') {
       try {
-        const response = await fetch('http://localhost:8080/api/todos', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ title: newTodo, description: newTodo, completed: false }),
+        const data = await callApi('http://localhost:8080/api/todos', 'POST', {
+          title: newTodo,
+          description: newTodo,
+          completed: false,
         });
-        if (response.ok) {
-          const data = await response.json();
-          setTodos((prevTodos) => [...prevTodos, data]);
-          setNewTodo('');
-          fetchTodos();
-        } else {
-          console.error('Failed to add todo:', response.status);
-        }
+        setTodos((prevTodos) => [...prevTodos, data]);
+        setNewTodo('');
+        fetchTodos();
       } catch (error) {
         console.error('Error adding todo:', error);
       }
@@ -78,24 +73,22 @@ const TodoList: React.FC = () => {
 
   const updateTodo = async (todo: Todo) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/todos/${todo.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(todo),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Updated todo:', data);
-        fetchTodos(); // 更新 todos
-      } else {
-        console.error('Failed to update todo:', response.status);
-      }
+      const data = await callApi(`http://localhost:8080/api/todos/${todo.id}`, 'PUT', JSON.stringify(todo));
+      fetchTodos(); // 更新 todos
     } catch (error) {
       console.error('Error updating todo:', error);
     }
   };
+
+  const delTodo = async (todo: Todo) => {
+    try {
+      await callApi(`http://localhost:8080/api/todos/${todo.id}`, 'DELETE', null);
+      fetchTodos(); // 更新 todos
+    } catch (error) {
+      console.error('Error updating todo:', error);
+    }
+  };
+
 
   // 處理完成 todo
   const handleTodoComplete = (index: number) => {
@@ -119,20 +112,7 @@ const TodoList: React.FC = () => {
       console.log(updatedTodos[index]);
       
       // 發送刪除 todo 的 API 請求
-      fetch(`http://localhost:8080/api/todos/${updatedTodos[index].id}`, { method: 'DELETE' })
-      .then((response) => {
-        if (response.ok) {
-          console.log('Todo removed successfully.');
-          fetchTodos();
-        } else {
-          console.error('Failed to remove todo:', response.status);
-        }
-      })
-      .catch((error) => {
-        console.error('Error removing todo:', error);
-      });
-
-
+      delTodo(updatedTodos[index]);
       return updatedTodos;
     });
   };
