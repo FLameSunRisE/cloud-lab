@@ -6,6 +6,7 @@ import com.flamesunrises.todolistserver.service.TodoService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 1.0.0
  * @date 2023/06/22
  */
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/todos")
 public class TodoController {
@@ -64,7 +66,7 @@ public class TodoController {
     // 更新 todo 物件的屬性
     todo.setTitle(updatedTodo.getTitle());
     todo.setDescription(updatedTodo.getDescription());
-    // 根據需要更新其他屬性
+    todo.setCompleted(updatedTodo.isCompleted());
 
     return todoRepository.save(todo);
   }

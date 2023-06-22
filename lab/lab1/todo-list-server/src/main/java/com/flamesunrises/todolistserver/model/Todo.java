@@ -23,5 +23,5 @@ public class Todo {
 
   private String title;
   private String description;
-  private String isCompleted;
+  private boolean completed;
 }
