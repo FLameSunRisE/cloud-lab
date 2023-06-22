@@ -2,59 +2,15 @@
 
 此專案主要是學習雲端架構的 lab
 
-## 專案名稱 TODOLIST
+- [cloud-lab](#cloud-lab)
+  - [LAB1- TODOLIST](#lab1--todolist)
 
-## 專案描述
+---
 
-TODOLIST 是一個前後端分離的應用程式，使用 Next.js 作為前端框架，Spring Boot 作為後端框架。該應用程式允許使用者創建、編輯和管理待辦事項清單。
+## [LAB1- TODOLIST](./lab/lab1/readme.md)
 
-## 專案架構
+是一個簡單的待辦事項清單應用程式，讓使用者可以新增、完成和移除待辦事項。該應用程式使用 React 作為前端框架，並與後端的 RESTful API 進行數據交互。
 
-## 前端
+![lab1_frontend_todoList](./img/lab1_frontend_todoList.png)
 
-## 框架 Next.js
-
-## 語言 JavaScript
-
-- 使用 React 組件來建構用戶界面
-- 使用 Next.js 提供的資料綁定功能來綁定後端 API 的數據
-- 使用 React Router 來處理路由
-
-## 後端
-
-- 框架 Spring Boot
-  - 使用 Spring Boot 提供的 MVC 架構來處理請求和響應
-  - 使用 Spring Data JPA 來處理與資料庫的交互
-  - 使用 Spring Security 來實現身份驗證和授權機制
-  - 使用 RESTful API 設計風格來定義後端 API
-
-## 資料庫
-
-可以使用任何關聯式資料庫，如 MySQL 或 PostgreSQL
-使用 Spring Data JPA 來處理與資料庫的交互
-
-## 專案功能
-
-## 用戶註冊和登入
-
-- 用戶可以註冊新帳號並進行身份驗證
-- 用戶可以使用註冊的帳號進行登入
-
-## 待辦事項管理
-
-- 用戶可以創建新的待辦事項
-- 用戶可以編輯現有的待辦事項
-- 用戶可以標記待辦事項為已完成或未完成
-- 用戶可以刪除待辦事項
-- 用戶可以查看所有待辦事項或僅查看已完成或未完成的待辦事項
-
-## 用戶身份驗證和授權
-
-- 只有登入的用戶才能創建、編輯和刪除待辦事項
-- 只能編輯和刪除自己創建的待辦事項
-
-## 前端路由
-
-- 使用 React Router 來實現前端路由，實現多頁面應用程式
-- 使用 Protected Routes 來保護需要登入的頁面
-- 以上是一個基本的 TODOLIST 專案的架構和功能描述，你可以根據這個架構進一步開發和擴展你的專案。
+---
