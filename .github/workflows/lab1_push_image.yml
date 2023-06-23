@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
 #       - name: Set up Docker Buildx
 #         uses: docker/setup-buildx-action@v1
@@ -25,13 +25,25 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and Push Docker Images
+      - name: Set up Docker Compose
+        run: docker-compose -f path/to/docker-compose.yml up -d
+
+      - name: Build and push
         run: |
-          cd cloud-lab/lab/lab1
-          docker-compose build
-          docker tag lab1_frontend flamesunrise/lab1_frontend:v1
-          docker tag lab1_backend flamesunrise/lab1_backend:v1
-          docker tag postgres:15.3-alpine flamesunrise/lab1_database:v1
-          docker push flamesunrise/lab1_frontend:v1
-          docker push flamesunrise/lab1_backend:v1
-          docker push flamesunrise/lab1_database:v1
+          docker-compose -f cloud-lab/lab/lab1/docker-compose.yml build
+          docker-compose -f cloud-lab/lab/lab1/docker-compose.yml push
+
+#       -
+#         name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v2
+        
+#       - name: Build and Push Docker Images
+#         run: |
+#           cd cloud-lab/lab/lab1
+#           docker-compose build
+#           docker tag lab1_frontend flamesunrise/lab1_frontend:v1
+#           docker tag lab1_backend flamesunrise/lab1_backend:v1
+#           docker tag postgres:15.3-alpine flamesunrise/lab1_database:v1
+#           docker push flamesunrise/lab1_frontend:v1
+#           docker push flamesunrise/lab1_backend:v1
+#           docker push flamesunrise/lab1_database:v1
