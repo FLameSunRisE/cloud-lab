@@ -28,12 +28,12 @@ jobs:
 
       - name: Set up Docker Compose
         run: | 
-          cd cloud-lab/lab/lab1
+          cd lab/lab1
           docker-compose -f docker-compose.yml up -d
 
       - name: Build and push
         run: |
-          cd cloud-lab/lab/lab1
+          cd lab/lab1
           docker-compose -f docker-compose.yml build
           docker-compose -f docker-compose.yml push
 
@@ -43,7 +43,7 @@ jobs:
         
 #       - name: Build and Push Docker Images
 #         run: |
-#           cd cloud-lab/lab/lab1
+#           cd lab/lab1
 #           docker-compose build
 #           docker tag lab1_frontend flamesunrise/lab1_frontend:v1
 #           docker tag lab1_backend flamesunrise/lab1_backend:v1
