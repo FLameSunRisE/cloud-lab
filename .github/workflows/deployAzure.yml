@@ -1,0 +1,23 @@
+name: Deploy to Azure Web App
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Azure CLI
+        uses: azure/cli-action@v1
+        with:
+          azcliversion: latest
+
+      - name: Deploy to Azure Web App
+        run: |
+          az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+          az webapp create --name Lab1DemoTodoList --resource-groupCloudLab --plan ASP-CloudLab-ae33
+          az webapp config container set --name Lab1DemoTodoList --resource-groupCloudLab --multicontainer-config-file docker-compose.yml
