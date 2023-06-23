@@ -27,12 +27,15 @@ jobs:
 #         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: Set up Docker Compose
-        run: docker-compose -f cloud-lab/lab/lab1/docker-compose.yml up -d
+        run: | 
+          cd cloud-lab/lab/lab1
+          docker-compose -f docker-compose.yml up -d
 
       - name: Build and push
         run: |
-          docker-compose -f cloud-lab/lab/lab1/docker-compose.yml build
-          docker-compose -f cloud-lab/lab/lab1/docker-compose.yml push
+          cd cloud-lab/lab/lab1
+          docker-compose -f docker-compose.yml build
+          docker-compose -f docker-compose.yml push
 
 #       -
 #         name: Set up Docker Buildx
