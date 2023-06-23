@@ -1,6 +1,8 @@
 name: Build and Push Docker Images
 
 on:
+  # 定手動觸發工作流程
+  workflow_dispatch: 
   push:
     branches:
       - main
