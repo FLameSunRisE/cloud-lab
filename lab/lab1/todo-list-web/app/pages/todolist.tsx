@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect  } from 'react';
-import { callApi } from '../api/api';
+import { callApi,callApiGet } from '../api/api';
 import Button from '../components/Button';
 
 // Todo 物件的介面定義
@@ -77,10 +77,7 @@ const TodoList: React.FC = () => {
   // 獲取所有的 todo
   const fetchTodos = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/todos');
-      console.log('response');
-      console.log(response);
-      const data = await response.json();
+      const data = await callApiGet('api/todos');
       console.log('data');
       console.log(data);
       setTodos(data);
@@ -98,7 +95,7 @@ const TodoList: React.FC = () => {
   const handleAddTodo = async () => {
     if (newTodo.trim() !== '') {
       try {
-        const data = await callApi('http://localhost:8080/api/todos', 'POST', {
+        const data = await callApi('api/todos', 'POST', {
           title: newTodo,
           description: newTodo,
           completed: false,
@@ -131,7 +128,7 @@ const TodoList: React.FC = () => {
   // 更新 todo
   const updateTodo = async (todo: Todo) => {
     try {
-      const data = await callApi(`http://localhost:8080/api/todos/${todo.id}`, 'PUT', todo);
+      const data = await callApi(`api/todos/${todo.id}`, 'PUT', todo);
       fetchTodos(); // 更新 todos
     } catch (error) {
       console.error('Error updating todo:', error);
@@ -141,7 +138,7 @@ const TodoList: React.FC = () => {
   // 刪除 todo
   const delTodo = async (todo: Todo) => {
     try {
-      await callApi(`http://localhost:8080/api/todos/${todo.id}`, 'DELETE', null);
+      await callApi(`api/todos/${todo.id}`, 'DELETE', null);
       fetchTodos(); // 更新 todos
     } catch (error) {
       console.error('Error updating todo:', error);

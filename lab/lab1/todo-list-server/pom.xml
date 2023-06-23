@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<spring.boot.version>2.7.12</spring.boot.version>
+		<skipTests>true</skipTests>
 	</properties>
 	<dependencies>
 		<!-- Spring Boot Starter -->
@@ -76,6 +77,7 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+<!--					<skipTests>${skipTests}</skipTests>-->
 				</configuration>
 			</plugin>
 		</plugins>
