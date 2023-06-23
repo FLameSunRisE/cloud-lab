@@ -11,10 +11,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Azure CLI Action
-        uses: Azure/cli@v1.0.7
-        with:
-          azcliversion: latest
+#       - name: Azure CLI Action
+#         uses: Azure/cli@v1.0.7
+#         with:
+#           azcliversion: latest
           
       - name: Azure Login
         uses: azure/login@v1
