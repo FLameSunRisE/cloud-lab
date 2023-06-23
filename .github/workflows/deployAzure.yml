@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -11,11 +12,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-#       - name: Azure CLI Action
-#         uses: Azure/cli@v1.0.7
-#         with:
-#           azcliversion: latest
-          
+      - name: Check Azure CLI version
+        run: az --version
+
+      - name: Set Azure Cloud environment
+        run: az cloud set -n azurecloud
+
       - name: Azure Login
         uses: azure/login@v1
         with:
@@ -24,5 +26,5 @@ jobs:
       - name: Deploy to Azure Web App
         run: |
           az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-          az webapp create --name Lab1DemoTodoList --resource-groupCloudLab --plan ASP-CloudLab-ae33
-          az webapp config container set --name Lab1DemoTodoList --resource-groupCloudLab --multicontainer-config-file docker-compose.yml
+          az webapp create --name Lab1DemoTodoList --resource-group CloudLab --plan ASP-CloudLab-ae33
+          az webapp config container set --name Lab1DemoTodoList --resource-group CloudLab --multicontainer-config-file docker-compose.yml
