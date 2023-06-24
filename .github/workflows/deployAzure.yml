@@ -5,6 +5,11 @@ on:
       - main
       - dev
 
+env:
+  AZURE_WEBAPP_NAME: Lab1DemoTodoList
+  AZURE_RESOURCE_GROUP: CloudLab
+  DOCKER_COMPOSE_FILE: lab/lab1/docker-compose.yml
+  
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -29,9 +34,44 @@ jobs:
 
       - name: Verify Azure Subscription
         run: az account show
+        
+      - name: Check if Web App exists
+        id: check_webapp
+        run: |
+          webapp_name="Lab1DemoTodoList"
+          resource_group="CloudLab"
+
+          if az webapp show --name $webapp_name --resource-group $resource_group &>/dev/null; then
+            echo "::set-output name=exists::true"
+          else
+            echo "::set-output name=exists::false"
+          fi
+          
+      - name: Create Web App
+        if: steps.check_webapp.outputs.exists == 'false'
+        run: |
+          webapp_name="Lab1DemoTodoList"
+          resource_group="CloudLab"
+
+          echo "Creating Web App '$webapp_name'..."
+          az webapp create --name $webapp_name --resource-group $resource_group --plan ASP-CloudLab-ae33
+          echo "Web App created successfully."
+
+      - name: Authenticate Docker to Docker Hub
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Pull Docker Compose images
+        run: |
+          cd $DOCKER_COMPOSE_FILE
+          docker-compose pull
 
       - name: Deploy to Azure Web App
         run: |
-          az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-          az webapp create --name Lab1DemoTodoList --resource-group CloudLab --plan ASP-CloudLab-ae33
-          az webapp config container set --name Lab1DemoTodoList --resource-group CloudLab --multicontainer-config-file docker-compose.yml
+          cd $DOCKER_COMPOSE_FILE
+          docker-compose up -d
+          
+#       - name: Deploy to Azure Web App
+#         run: |
+#           az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+#           az webapp create --name Lab1DemoTodoList --resource-group CloudLab --plan ASP-CloudLab-ae33
+#           az webapp config container set --name Lab1DemoTodoList --resource-group CloudLab --multicontainer-config-file docker-compose.yml
