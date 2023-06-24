@@ -125,26 +125,40 @@ jobs:
           az webapp create --name $webapp_name --resource-group $resource_group --plan ASP-CloudLab-ae33
           echo "Web App created successfully."
 
-      - name: Deploy Docker Images to Azure Web App
+      - name: Deploy Docker Compose to Azure Web App
         run: |
           az webapp config container set \
             --name $AZURE_WEBAPP_NAME \
             --resource-group $AZURE_RESOURCE_GROUP \
-            --docker-custom-image-name flamesunrise/lab1_frontend:v1 \
-            --docker-registry-server-url https://index.docker.io/v1/ \
-            --docker-registry-server-user ${{ secrets.DOCKERHUB_USERNAME }} \
-            --docker-registry-server-password ${{ secrets.DOCKERHUB_PASSWORD }}
-          az webapp config container set \
+            --multicontainer-config-type compose \
+            --multicontainer-config-file $DOCKER_COMPOSE_FILE
+          az webapp up \
             --name $AZURE_WEBAPP_NAME \
-            --resource-group $AZURE_RESOURCE_GROUP \
-            --docker-custom-image-name flamesunrise/lab1_backend:v1 \
-            --docker-registry-server-url https://index.docker.io/v1/ \
-            --docker-registry-server-user ${{ secrets.DOCKERHUB_USERNAME }} \
-            --docker-registry-server-password ${{ secrets.DOCKERHUB_PASSWORD }}
-          az webapp config container set \
-            --name $AZURE_WEBAPP_NAME \
-            --resource-group $AZURE_RESOURCE_GROUP \
-            --docker-custom-image-name flamesunrise/lab1_database:v1 \
-            --docker-registry-server-url https://index.docker.io/v1/ \
-            --docker-registry-server-user ${{ secrets.DOCKERHUB_USERNAME }} \
-            --docker-registry-server-password ${{ secrets.DOCKERHUB_PASSWORD }}
+            --resource-group $AZURE_RESOURCE_GROUP
+      
+#       - name: Deploy Docker Images to Azure Web App
+#         run: |
+#           az webapp config container set \
+#             --name $AZURE_WEBAPP_NAME \
+#             --resource-group $AZURE_RESOURCE_GROUP \
+#             --docker-custom-image-name flamesunrise/lab1_database:v1 \
+#             --docker-registry-server-url https://index.docker.io/v1/ \
+#             --docker-registry-server-user ${{ secrets.DOCKERHUB_USERNAME }} \
+#             --docker-registry-server-password ${{ secrets.DOCKERHUB_PASSWORD }}
+#           az webapp config container set \
+#             --name $AZURE_WEBAPP_NAME \
+#             --resource-group $AZURE_RESOURCE_GROUP \
+#             --docker-custom-image-name flamesunrise/lab1_backend:v1 \
+#             --docker-registry-server-url https://index.docker.io/v1/ \
+#             --docker-registry-server-user ${{ secrets.DOCKERHUB_USERNAME }} \
+#             --docker-registry-server-password ${{ secrets.DOCKERHUB_PASSWORD }}
+#           az webapp config container set \
+#             --name $AZURE_WEBAPP_NAME \
+#             --resource-group $AZURE_RESOURCE_GROUP \
+#             --docker-custom-image-name flamesunrise/lab1_frontend:v1 \
+#             --docker-registry-server-url https://index.docker.io/v1/ \
+#             --docker-registry-server-user ${{ secrets.DOCKERHUB_USERNAME }} \
+#             --docker-registry-server-password ${{ secrets.DOCKERHUB_PASSWORD }}
+#           az webapp up \
+#             --name $AZURE_WEBAPP_NAME \
+#             --resource-group $AZURE_RESOURCE_GROUP
