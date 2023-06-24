@@ -13,6 +13,7 @@ env:
   AZURE_WEBAPP_NAME: Lab1DemoTodoList
   AZURE_RESOURCE_GROUP: CloudLab
   DOCKER_COMPOSE_FILE: lab/lab1
+  DOCKER_COMPOSE_WEBAPP_FILE: lab\lab1\devops
   
 jobs:
   deploy:
@@ -75,6 +76,13 @@ jobs:
         run: |
           cd $DOCKER_COMPOSE_FILE
           docker-compose up -d
+          
+      - name: Configure Azure Web App with Docker Compose
+        run: |
+          az webapp config container set \
+            --name $AZURE_WEBAPP_NAME \
+            --resource-group $AZURE_RESOURCE_GROUP \
+            --docker-compose-file $DOCKER_COMPOSE_WEBAPP_FILE\docker-compose.yml
           
 #       - name: Deploy to Azure Web App
 #         run: |
