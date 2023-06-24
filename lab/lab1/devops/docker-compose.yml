@@ -1,0 +1,33 @@
+version: '3'
+services:
+  frontend:
+    image: flamesunrise/lab1_frontend:v1
+    ports:
+      - 3000:3000
+    environment:
+      - API_HOST=backend
+      - API_PORT=8080
+    networks:
+      - my-network
+  backend:
+    image: flamesunrise/lab1_backend:v1
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+    networks:
+      - my-network
+  database:
+    image: flamesunrise/lab1_database:v1
+    hostname: my-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=Test
+    ports:
+      - 5432:5432
+    networks:
+      - my-network
+networks:
+  my-network:
+    driver: bridge
