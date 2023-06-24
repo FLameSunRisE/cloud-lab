@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 jobs:
   deploy:
@@ -15,13 +16,19 @@ jobs:
       - name: Check Azure CLI version
         run: az --version
 
-      - name: Set Azure Cloud environment
-        run: az cloud set -n azurecloud
-
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Set Azure Cloud
+        run: az cloud set -n azurecloud
+
+      - name: List Azure Subscriptions
+        run: az account list
+
+      - name: Verify Azure Subscription
+        run: az account show
 
       - name: Deploy to Azure Web App
         run: |
