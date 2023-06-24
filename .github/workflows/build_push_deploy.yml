@@ -50,6 +50,7 @@ jobs:
           docker-compose -f docker-compose.yml push
 
   pull-images:
+    needs: [build]
     runs-on: ubuntu-latest
 
     steps:
