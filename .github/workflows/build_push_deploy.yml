@@ -125,17 +125,6 @@ jobs:
           az webapp create --name $webapp_name --resource-group $resource_group --plan ASP-CloudLab-ae33
           echo "Web App created successfully."
 
-      - name: Deploy Docker Compose to Azure Web App
-        run: |
-#           az webapp config container set \
-#             --name $AZURE_WEBAPP_NAME \
-#             --resource-group $AZURE_RESOURCE_GROUP \
-#             --multicontainer-config-type compose \
-#             --multicontainer-config-file lab/lab1/devops/docker-compose.yml
-#           az webapp up \
-#             --name $AZURE_WEBAPP_NAME \
-#             --resource-group $AZURE_RESOURCE_GROUP
-      
       - name: Deploy Docker Images to Azure Web App
         run: |
           az webapp config container set \
