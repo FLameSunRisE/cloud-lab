@@ -151,6 +151,5 @@ jobs:
             --docker-registry-server-url https://index.docker.io/v1/ \
             --docker-registry-server-user ${{ secrets.DOCKERHUB_USERNAME }} \
             --docker-registry-server-password ${{ secrets.DOCKERHUB_PASSWORD }}
-          az webapp up \
-            --name $AZURE_WEBAPP_NAME \
-            --resource-group $AZURE_RESOURCE_GROUP
+          echo $(pwd)
+
