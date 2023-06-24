@@ -28,8 +28,11 @@ services:
     networks:
       - my-network
   database:
-    image: postgres:15.3-alpine
+    image: flamesunrise/lab1_database:v1
     hostname: my-postgres
+    build:
+      context: ./db/postgre
+      dockerfile: Dockerfile
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123456

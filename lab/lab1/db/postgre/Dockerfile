@@ -2,7 +2,6 @@
 # FROM postgres:latest
 FROM postgres:15.3-alpine
 
-
 # 設定環境變數
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=123456
