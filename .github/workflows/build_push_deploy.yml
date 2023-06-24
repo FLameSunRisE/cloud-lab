@@ -11,6 +11,9 @@ env:
   AZURE_RESOURCE_GROUP: CloudLab
   DOCKER_COMPOSE_FILE: lab/lab1
   DOCKER_COMPOSE_WEBAPP_FILE: lab/lab1/devops
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+  
 
 jobs:
   build:
