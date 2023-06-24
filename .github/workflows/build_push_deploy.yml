@@ -127,13 +127,6 @@ jobs:
 
       - name: Deploy Docker Compose to Azure Web App
         run: |
-          # Checkout repository
-          git clone <repository_url> repository
-          cd repository
-
-          # Copy Docker Compose file to the correct location
-          cp lab/lab1/devops/docker-compose.yml $DOCKER_COMPOSE_WEBAPP_FILE/docker-compose.yml
-        
 #           az webapp config container set \
 #             --name $AZURE_WEBAPP_NAME \
 #             --resource-group $AZURE_RESOURCE_GROUP \
