@@ -71,18 +71,55 @@ jobs:
           docker-compose pull
       - name: Check Pulled Docker Images
         run: docker images
-        
-      - name: Deploy to Azure Web App
+
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Pull Docker Images from Docker Hub
         run: |
-          cd $DOCKER_COMPOSE_FILE
-          docker-compose up -d
+          docker pull flamesunrise/lab1_frontend:v1
+          docker pull flamesunrise/lab1_backend:v1
+          docker pull flamesunrise/lab1_database:v1
           
-      - name: Configure Azure Web App with Docker Compose
+      - name: Deploy Docker Images to Azure Web App
         run: |
           az webapp config container set \
             --name $AZURE_WEBAPP_NAME \
             --resource-group $AZURE_RESOURCE_GROUP \
-            --docker-compose-file $DOCKER_COMPOSE_WEBAPP_FILE\docker-compose.yml
+            --docker-custom-image-name flamesunrise/lab1_frontend:v1 \
+            --docker-registry-server-url https://index.docker.io/v1/ \
+            --docker-registry-server-user ${{ secrets.DOCKERHUB_USERNAME }} \
+            --docker-registry-server-password ${{ secrets.DOCKERHUB_PASSWORD }}
+          az webapp config container set \
+            --name $AZURE_WEBAPP_NAME \
+            --resource-group $AZURE_RESOURCE_GROUP \
+            --docker-custom-image-name flamesunrise/lab1_backend:v1 \
+            --docker-registry-server-url https://index.docker.io/v1/ \
+            --docker-registry-server-user ${{ secrets.DOCKERHUB_USERNAME }} \
+            --docker-registry-server-password ${{ secrets.DOCKERHUB_PASSWORD }}
+          az webapp config container set \
+            --name $AZURE_WEBAPP_NAME \
+            --resource-group $AZURE_RESOURCE_GROUP \
+            --docker-custom-image-name flamesunrise/lab1_database:v1 \
+            --docker-registry-server-url https://index.docker.io/v1/ \
+            --docker-registry-server-user ${{ secrets.DOCKERHUB_USERNAME }} \
+            --docker-registry-server-password ${{ secrets.DOCKERHUB_PASSWORD }}
+
+#       - name: Deploy to Azure Web App
+#         run: |
+#           cd $DOCKER_COMPOSE_FILE
+#           docker-compose up -d
+          
+#       - name: Configure Azure Web App with Docker Compose
+#         run: |
+#           az webapp config container set \
+#             --name $AZURE_WEBAPP_NAME \
+#             --resource-group $AZURE_RESOURCE_GROUP \
+#             --docker-compose-file $DOCKER_COMPOSE_WEBAPP_FILE\docker-compose.yml
           
 #       - name: Deploy to Azure Web App
 #         run: |
