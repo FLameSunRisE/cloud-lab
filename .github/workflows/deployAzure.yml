@@ -1,9 +1,13 @@
 name: Deploy to Azure Web App
 on:
-  push:
-    branches:
-      - main
-      - dev
+  workflow_run:
+    workflows: ["Build and Push Docker Images"]
+    types:
+      - completed
+#   push:
+#     branches:
+#       - main
+#       - dev
 
 env:
   AZURE_WEBAPP_NAME: Lab1DemoTodoList
@@ -64,7 +68,9 @@ jobs:
         run: |
           cd $DOCKER_COMPOSE_FILE
           docker-compose pull
-
+      - name: Check Pulled Docker Images
+        run: docker images
+        
       - name: Deploy to Azure Web App
         run: |
           cd $DOCKER_COMPOSE_FILE
