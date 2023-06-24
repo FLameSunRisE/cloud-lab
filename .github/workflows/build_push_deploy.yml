@@ -131,7 +131,7 @@ jobs:
             --name $AZURE_WEBAPP_NAME \
             --resource-group $AZURE_RESOURCE_GROUP \
             --multicontainer-config-type compose \
-            --multicontainer-config-file $DOCKER_COMPOSE_FILE
+            --multicontainer-config-file $DOCKER_COMPOSE_WEBAPP_FILE
           az webapp up \
             --name $AZURE_WEBAPP_NAME \
             --resource-group $AZURE_RESOURCE_GROUP
