@@ -99,11 +99,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: Set Azure Cloud
         run: az cloud set -n azurecloud
 
@@ -139,6 +134,10 @@ jobs:
     needs: [before-deploy]
     runs-on: ubuntu-latest
     steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Azure App Service frontend
         uses: azure/webapps-deploy@v2
         with:
@@ -150,6 +149,10 @@ jobs:
     needs: [before-deploy]
     runs-on: ubuntu-latest
     steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Azure App Service backend
         uses: azure/webapps-deploy@v2
         with:
