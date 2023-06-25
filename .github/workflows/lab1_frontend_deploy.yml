@@ -1,0 +1,92 @@
+name: [Lab1-todolist-frontend] Deploy to Azure Web App
+
+on:
+  workflow_dispatch:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches: [ main ]
+
+env:
+  AZURE_WEBAPP_NAME: Lab1DemoTodoList
+  AZURE_RESOURCE_GROUP: CloudLab
+  DOCKER_COMPOSE_FILE: lab/lab1
+  DOCKER_COMPOSE_WEBAPP_FILE: lab/lab1/devops
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+  ACR_RESGISTRY_USERNAME: ${{ secrets.ACR_RESGISTRY_USERNAME }}
+  ACR_RESGISTRY_PASSWORD: ${{ secrets.ACR_RESGISTRY_PASSWORD }}
+  ACR_NAME: acrcouldresgistry
+  AWS_CLOUD_DB_PASSWORD: ${{ secrets.AWS_CLOUD_DB_PASSWORD }}
+
+  
+
+jobs:
+  before-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set Azure Cloud
+        run: az cloud set -n azurecloud
+
+      - name: List Azure Subscriptions
+        run: az account list
+
+      - name: Verify Azure Subscription
+        run: az account show
+
+      - name: Check if Web App exists
+        id: check_webapp
+        run: |
+          webapp_name="Lab1DemoTodoList"
+          resource_group="CloudLab"
+
+          if az webapp show --name $webapp_name --resource-group $resource_group &>/dev/null; then
+            echo "::set-output name=exists::true"
+          else
+            echo "::set-output name=exists::false"
+          fi
+
+      - name: Create Web App
+        if: steps.check_webapp.outputs.exists == 'false'
+        run: |
+          webapp_name="Lab1DemoTodoList"
+          resource_group="CloudLab"
+
+          echo "Creating Web App '$webapp_name'..."
+          az webapp create --name $webapp_name --resource-group $resource_group --plan ASP-CloudLab-ae33
+          echo "Web App created successfully."
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      - name: Azure App Service frontend
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: Lab1DemoTodoList
+          images: |
+            acrcouldresgistry.azurecr.io/flamesunrise/lab1_frontend:v1
+
+#   deploy-backend:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Azure App Service backend
+#         uses: azure/webapps-deploy@v2
+#         with:
+#           app-name: lab-todo-backend
+#           images: |
+#             acrcouldresgistry.azurecr.io/flamesunrise/lab1_backend:v1
