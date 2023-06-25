@@ -123,7 +123,7 @@ jobs:
   #           docker.io/flamesunrise/lab1_frontend:v1
 
   deploy-backend:
-    needs: [before-deploy]
+    needs: [before-deploy,build]
     runs-on: ubuntu-latest
     steps:
       - name: Azure Login
