@@ -16,6 +16,7 @@ env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
   ACR_NAME: acrcouldresgistry
+  AWS_CLOUD_DB_PASSWORD: ${{ secrets.AWS_CLOUD_DB_PASSWORD }}
   
 
 jobs:
