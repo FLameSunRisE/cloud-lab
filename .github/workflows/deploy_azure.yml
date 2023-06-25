@@ -1,12 +1,12 @@
-name: Build, Push, and Deploy to Azure Web App(Backend,Frontend)
+name: [Lab1-todolist-all] Build, Push, and Deploy to Azure Web App
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches: [ main ]
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches: [ main ]
 
 env:
   AZURE_WEBAPP_NAME: Lab1DemoTodoList
@@ -99,6 +99,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
       - name: Set Azure Cloud
         run: az cloud set -n azurecloud
 
