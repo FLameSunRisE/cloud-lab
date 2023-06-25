@@ -1,7 +1,7 @@
 version: '3'
 services:
   frontend:
-    image: flamesunrise/lab1_frontend:v1
+    image: acrcouldresgistry.azurecr.io/flamesunrise/lab1_frontend:v1
     container_name: azure-lab1-frontend
     build:
       context: ./todo-list-web
@@ -10,37 +10,39 @@ services:
       - API_HOST=localhost
       - API_PORT=8080
     ports:
-      - 80:3000
+      - 3000:3000
     depends_on:
       - backend
     networks:
       - my-network
   backend:
-    image: flamesunrise/lab1_backend:v1
+    image: acrcouldresgistry.azurecr.io/flamesunrise/lab1_backend:v1
     container_name: azure-lab1-backend
+    environment:
+      - AWS_CLOUD_DB_PASSWORD=${AWS_CLOUD_DB_PASSWORD}
     build:
       context: ./todo-list-server
       dockerfile: Dockerfile
     ports:
       - 8080:8080
-    depends_on:
-      - database
+    # depends_on:
+    #   - database
     networks:
       - my-network
-  database:
-    image: flamesunrise/lab1_database:v1
-    hostname: my-postgres
-    build:
-      context: ./db/postgre
-      dockerfile: Dockerfile
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=Test
-    ports:
-      - 5432:5432
-    networks:
-      - my-network
+  # database:
+  #   image: acrcouldresgistry.azurecr.io/flamesunrise/lab1_database:v1
+  #   hostname: my-postgres
+  #   build:
+  #     context: ./db/postgre
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=123456
+  #     - POSTGRES_DB=Test
+  #   ports:
+  #     - 5432:5432
+  #   networks:
+  #     - my-network
 networks:
   my-network:
     driver: bridge
