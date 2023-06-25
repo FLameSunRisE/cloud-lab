@@ -51,14 +51,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      # - name: Build and Push Docker Image
-      #   run: |
-      #     docker build -t acrcouldresgistry.azurecr.io/flamesunrise/lab1_backend:v1 lab/lab1/todo-list-server
-      #     docker push acrcouldresgistry.azurecr.io/flamesunrise/lab1_backend:v1
-
-      #     docker build -t acrcouldresgistry.azurecr.io/flamesunrise/lab1_frontend:v1 lab/lab1/todo-list-web
-      #     docker push acrcouldresgistry.azurecr.io/flamesunrise/lab1_frontend:v1
-
 #       - name: Login to Docker Hub
 #         uses: docker/login-action@v2
 #         with:
@@ -76,30 +68,30 @@ jobs:
           docker-compose -f docker-compose.yml build
           docker-compose -f docker-compose.yml push
           
-  pull-images:
-    needs: [build]
-    runs-on: ubuntu-latest
+#   pull-images:
+#     needs: [build]
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
 
-      - name: Authenticate Docker to Docker Hub
-        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+#       - name: Authenticate Docker to Docker Hub
+#         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Pull Docker Compose images
-        run: |
-          cd $DOCKER_COMPOSE_FILE
-          docker-compose pull
-
-      - name: Check Pulled Docker Images
-        run: docker images
-
-#       - name: Pull Docker Images from Docker Hub
+#       - name: Pull Docker Compose images
 #         run: |
-#           docker pull flamesunrise/lab1_frontend:v1
-#           docker pull flamesunrise/lab1_backend:v1
-#           docker pull flamesunrise/lab1_database:v1
+#           cd $DOCKER_COMPOSE_FILE
+#           docker-compose pull
+
+#       - name: Check Pulled Docker Images
+#         run: docker images
+
+# #       - name: Pull Docker Images from Docker Hub
+# #         run: |
+# #           docker pull flamesunrise/lab1_frontend:v1
+# #           docker pull flamesunrise/lab1_backend:v1
+# #           docker pull flamesunrise/lab1_database:v1
 
   before-deploy:
     needs: [build, pull-images]
@@ -109,10 +101,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+#       - name: Azure Login
+#         uses: azure/login@v1
+#         with:
+#           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
 
   # deploy-frontend:
@@ -144,7 +136,8 @@ jobs:
           app-name: lab-todo-backend
           images: |
             docker.io/flamesunrise/lab1_backend:v1
-
+            port: 8080
+        
 #       - name: Deploy Docker Images to Azure Web App
 #         run: |
 #           az webapp config container set \
