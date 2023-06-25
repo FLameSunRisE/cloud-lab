@@ -17,7 +17,6 @@ env:
   DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
   ACR_NAME: acrcouldresgistry
   AWS_CLOUD_DB_PASSWORD: ${{ secrets.AWS_CLOUD_DB_PASSWORD }}
-  
 
 jobs:
   build:
@@ -44,7 +43,9 @@ jobs:
         run: mvn clean package -f lab/lab1/todo-list-server/pom.xml
 
       - name: Set up Docker Compose
-        run: docker-compose -f lab/lab1/docker-compose.yml build
+        run: |
+          echo "AWS_CLOUD_DB_PASSWORD=${{ secrets.AWS_CLOUD_DB_PASSWORD }}" >> lab/lab1/.env
+          docker-compose  -f lab/lab1/docker-compose.yml build
         
       - name: Login to Docker Hub
         uses: docker/login-action@v1
@@ -60,11 +61,13 @@ jobs:
 
       - name: Set up Docker Compose
         run: | 
+          echo "AWS_CLOUD_DB_PASSWORD=${{ secrets.AWS_CLOUD_DB_PASSWORD }}" >> lab/lab1/.env
           cd lab/lab1
           docker-compose -f docker-compose.yml up -d
 
       - name: Build and push
         run: |
+          echo "AWS_CLOUD_DB_PASSWORD=${{ secrets.AWS_CLOUD_DB_PASSWORD }}" >> lab/lab1/.env
           cd lab/lab1
           docker-compose -f docker-compose.yml build
           docker-compose -f docker-compose.yml push
