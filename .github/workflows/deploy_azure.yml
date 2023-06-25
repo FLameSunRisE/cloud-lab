@@ -48,7 +48,12 @@ jobs:
 
       - name: Set up Docker Compose
         run: docker-compose -f lab/lab1/docker-compose.yml build
-        
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
         with:
