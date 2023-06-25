@@ -25,5 +25,8 @@ WORKDIR /app
 # 從建置階段的容器中複製 JAR 檔案到此容器中
 COPY --from=builder /app/target/todo-list-server-0.0.1-SNAPSHOT.jar app.jar
 
+# 暴露应用程序所使用的端口
+EXPOSE 8080
+
 # 定義容器的執行命令
 CMD ["java", "-jar", "app.jar"]
