@@ -133,6 +133,7 @@ jobs:
           echo "Web App created successfully."
 
   deploy-frontend:
+    needs: [before-deploy]
     runs-on: ubuntu-latest
     steps:
       - name: Azure App Service frontend
@@ -143,6 +144,7 @@ jobs:
             acrcouldresgistry.azurecr.io/flamesunrise/lab1_frontend:v1
 
   deploy-backend:
+    needs: [before-deploy]
     runs-on: ubuntu-latest
     steps:
       - name: Azure App Service backend
