@@ -136,7 +136,6 @@ jobs:
           app-name: lab-todo-backend
           images: |
             docker.io/flamesunrise/lab1_backend:v1
-            port: 8080
         
 #       - name: Deploy Docker Images to Azure Web App
 #         run: |
