@@ -94,7 +94,7 @@ jobs:
 # #           docker pull flamesunrise/lab1_database:v1
 
   before-deploy:
-    needs: [build, pull-images]
+#     needs: [build, pull-images]
     runs-on: ubuntu-latest
 
     steps:
