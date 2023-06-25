@@ -1,4 +1,4 @@
-name: [Lab1-todolist-all] Build, Push, and Deploy to Azure Web App
+name: Lab1 todolist all Build, Push, and Deploy to Azure Web App
 
 on:
   workflow_dispatch:
